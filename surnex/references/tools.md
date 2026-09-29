@@ -10,7 +10,7 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | --- | --- | --- |
 | `list_organizations` | | First call of any session |
 | `list_projects` | | Source of every `project_id` |
-| `create_project` | W | Requires admin. Takes name and domain; collects nothing immediately |
+| `create_project` | W | Requires admin. Takes name, domain and keywords; queues the first run at once, which spends some allowance |
 | `delete_project` | X | Irreversible, cascades to all history. Confirm explicitly |
 | `get_usage_summary` | | Call before anything with volume |
 

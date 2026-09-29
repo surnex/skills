@@ -106,12 +106,10 @@ Tell the user the report itself is built under **Reports** in the dashboard, and
 
 ## Setting up a new project
 
-The order that avoids a week of no data:
-
-1. `create_project` — needs **admin**
-2. **Fix the schedules immediately.** All four default to daily at 00:00 UTC, and the first run may be 24 hours away. If the user wants data today, move the run hour to one still ahead of them.
+1. `create_project` with its keywords — needs **admin**. It queues the first run at once: rank check, backlinks, AI visibility, local, a site audit, web vitals and domain data. That run draws on the allowance (a few research lookups, one AI brand audit, up to 100 audit pages).
+2. **Set the schedules.** Three default to daily at 00:00 UTC; AI visibility defaults to weekly. Move the run hour to suit when the user reads their data.
 3. Lower what doesn't need daily — backlinks especially. Link profiles barely move day to day and each snapshot spends allowance.
-4. `add_tracked_keywords` and `add_competitor` — creating the project does not take these
-5. `start_site_audit` — it has no schedule and will otherwise never run
+4. `add_competitor` for who to compare against, and `add_tracked_keywords` for keywords beyond the first set.
+5. Later audits: `start_site_audit` — only the first one runs by itself.
 
-Set expectations explicitly: rankings arrive on the next scheduled check, not now.
+Set expectations explicitly: rankings arrive within minutes, everything else as each job finishes.

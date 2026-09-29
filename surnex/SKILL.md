@@ -17,13 +17,13 @@ Data reaches Surnex three ways, and knowing which applies stops you misreporting
 
 | Mode | Features | Refreshes |
 | --- | --- | --- |
-| **Scheduled** | Rank tracking, backlinks, GEO, local SEO | On the project's schedule — daily at 00:00 UTC by default |
+| **Scheduled** | Rank tracking, backlinks, GEO, local SEO | On the project's schedule — daily at 00:00 UTC by default, GEO weekly |
 | **On demand** | Site audits, web vitals, domain overview, tech stack, keyword research, AI search | **Never on their own.** Only when something starts them |
 | **Live** | Trends explore, trending now | Fetched during the call |
 
 Two consequences you will hit:
 
-- **A new project has no data.** Creating one does not collect anything — it creates four schedules and waits. First data can be 24 hours away. Never tell a user their new project is "still loading"; tell them when its schedule next runs.
+- **A new project is empty for a few minutes.** Creating one queues its first run straight away — rankings within minutes; backlinks, AI visibility, an audit and the rest as each job finishes — and that run spends some of the plan's allowance. After it, the four schedules keep the data fresh. An empty page right after creation is that run still working, not a failure.
 - **An old audit score means nobody has crawled.** Audits never re-run themselves. If the user wants current technical data, call `start_site_audit`.
 
 ## Start here, every time
