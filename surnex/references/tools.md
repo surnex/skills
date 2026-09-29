@@ -1,6 +1,6 @@
 # Surnex MCP tools
 
-93 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
+97 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
 
 Legend: **W** writes · **$** spends plan allowance · **X** destructive and irreversible
 
@@ -52,7 +52,7 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 
 Saved and tracked are separate systems with no promotion between them. To track a saved keyword, call `add_tracked_keywords` with its text.
 
-## Backlinks — 10
+## Backlinks — 11
 
 | Tool | | Notes |
 | --- | --- | --- |
@@ -63,17 +63,18 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | `get_new_lost_backlinks` | | Last 30 days |
 | `get_tld_distribution` | | |
 | `get_project_backlink_history` | | The growth trend |
-| `get_backlink_gap` | $ | Ad-hoc competitor domains, **up to 4 per run** |
+| `get_backlink_gap` | $ | Your project's site against ad-hoc competitor domains, **up to 4 per run**. Waits up to two minutes |
+| `get_backlink_gap_result` | | A gap already started — by id, or the latest. Free |
 | `refresh_backlinks` | W $ | Starts a job |
 | `export_backlinks_csv` | | |
 
-`get_backlink_gap` does not read the project's competitor list — pass domains explicitly.
+`get_backlink_gap` does not read the project's competitor list — pass domains explicitly. If it answers `still_running`, collect with `get_backlink_gap_result` and the `gap_id`: calling `get_backlink_gap` again buys a second analysis.
 
 ## Audits — 10
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `start_site_audit` | W $ | One crawl at a time per project. Set the page limit deliberately. JavaScript rendering costs 4 pages per page crawled |
+| `start_site_audit` | W $ | The project's own site or a subdomain only; defaults to its home page. One crawl at a time per project. Set the page limit deliberately. JavaScript rendering costs 4 pages per page crawled |
 | `list_audits` | | |
 | `get_audit_summary` | | Score, pages crawled, issue counts |
 | `get_audit_issues` | | Filterable by severity and category |
@@ -118,7 +119,7 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | `get_domain_competitors` | $ | **Discovered** rivals, not the configured list: whole-site keywords and traffic, common keywords, avg position. No rank |
 | `get_tech_stack` | $ | Categories grouped by type. No versions or confidence |
 
-Traffic figures are modelled estimates, not analytics. Use them comparatively. Domain arguments accept a URL and reduce it to the bare domain.
+Traffic figures are modelled estimates, not analytics. Use them comparatively. Domain arguments accept a URL and reduce it to the bare domain. These are billed to the organization: they take an optional `organization`, not a `project_id`, and work while the only project is the sample.
 
 ## Competitors — 3
 
@@ -128,19 +129,22 @@ Traffic figures are modelled estimates, not analytics. Use them comparatively. D
 | `add_competitor` | W | Feeds tracking comparison, GEO, citation gap |
 | `remove_competitor` | W | |
 
-## Local SEO — 10
+## Local SEO — 13
 
 | Tool | | Notes |
 | --- | --- | --- |
 | `get_local_overview` | | In the pack at each location's centre, plus grid top-3 share and average position |
 | `list_local_locations` | | Each location's listing, grid (`grid_size`, `spacing_km`) and keyword count |
-| `search_local_listings` | | Find a Google Business listing by name and town. **Not charged** |
+| `search_local_listings` | | Find a Google Business listing by name and town. **Not charged**, but a live search — search once |
 | `add_local_location` | W | A listing plus its grid: `grid_size` 3, 5 or 7, `spacing_km` apart. Uses one of the plan's local locations |
+| `update_local_location` | W | Rename, re-draw the grid (`spacing_km` 0.5, 1, 2 or 5), or pick the listing again. Keeps keywords and history |
 | `remove_local_location` | X | Deletes its keywords and their history; frees the location |
 | `get_local_keywords` | | Each keyword at its location (`place_id`), with its newest grid summary |
 | `add_local_keywords` | W | `location_id` + up to 10 keywords per location. Queues the first check at once |
+| `update_local_keyword` | W | `is_active` false pauses, true resumes. Keeps history; still takes a place |
+| `remove_local_keywords` | X | Deletes keywords and their grid history; frees room at the location |
 | `get_local_grid` | | One keyword's position at every grid point, the top 3 at each, and every check's summary. Optional `date` |
-| `get_local_rankings` | | The Maps pack at each location's centre, with ratings and reviews |
+| `get_local_rankings` | | The Maps pack at each location's centre, with ratings and reviews. Latest check by default (`latest_only`), `own_only` for your listing |
 | `get_google_business_profile` | | |
 
 Order: `search_local_listings` → `add_local_location` → `add_local_keywords` → `get_local_grid`. A location is the business's own listing, matched by its Google `cid`, so a business without a website works. Keywords add no location; a location holds at most 10. A grid point's `position: null` means not in the top 20; paid Maps results are excluded. A location made before listings existed has no coordinates and is searched once for its market until a listing is picked (in the dashboard).

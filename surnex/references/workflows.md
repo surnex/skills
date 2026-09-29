@@ -124,7 +124,7 @@ Tell the user the report itself is built under **Reports** in the dashboard, and
 
 ## Setting up a new project
 
-1. `create_project` with its keywords — needs **admin**. It queues the first run at once: rank check, backlink snapshot and full backlink profile, AI visibility, a site audit, web vitals and domain data. That run draws on the allowance (about five research lookups, one AI brand audit, up to 100 audit pages). Local SEO is not part of it.
+1. `create_project` with its keywords — needs **admin**. It queues the first run at once: rank check, backlink snapshot and full backlink profile, AI visibility, a site audit, web vitals and domain data. That run draws on the allowance (at least five research lookups, one AI brand audit, up to 101 site-audit pages — a 100-page crawl and a web vitals check). Local SEO is not part of it.
 2. **Set the schedules.** Rank tracking and backlinks default to daily at 00:00 UTC; AI visibility and local SEO default to weekly. Move the run hour to suit when the user reads their data.
 3. Lower what doesn't need daily — backlinks especially. Link profiles barely move day to day. Scheduled runs don't spend the monthly allowance, so this is about freshness, not cost.
 4. `add_competitor` for who to compare against, and `add_tracked_keywords` for keywords beyond the first set.

@@ -5,7 +5,7 @@ description: Operate Surnex, an SEO platform, through its MCP server — rank tr
 
 # Surnex
 
-Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 93 MCP tools at `https://api.surnex.io/mcp`.
+Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 97 MCP tools at `https://api.surnex.io/mcp`.
 
 Read this before your first tool call. Most mistakes with Surnex come from assuming it behaves like a live query API. It does not.
 
@@ -112,7 +112,7 @@ Check which before reporting a problem. "No backlinks found" on a three-week-old
 
 Load these when the task calls for them:
 
-- **`references/tools.md`** — all 93 tools by area, with which write and which are billable
+- **`references/tools.md`** — all 97 tools by area, with which write and which are billable
 - **`references/workflows.md`** — worked recipes: weekly review, audit triage, link-gap prospecting, AI-visibility audit, local SEO setup, monthly reporting
 - **`references/interpreting.md`** — what the numbers mean and how they mislead: alert thresholds, audit scoring, keyword metrics, AI-answer variance
 - **`references/troubleshooting.md`** — auth failures, refusals, and empty results
