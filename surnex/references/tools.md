@@ -1,6 +1,6 @@
 # Surnex MCP tools
 
-88 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
+93 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
 
 Legend: **W** writes · **$** spends plan allowance · **X** destructive and irreversible
 
@@ -24,13 +24,13 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | `get_keyword_ranking_history` | | Positions over a date range |
 | `get_ranking_changes` | | Movement between two dates |
 | `get_competitor_comparison` | | Your position vs competitors, per keyword |
-| `add_tracked_keywords` | W | Counts against the plan's keyword limit |
-| `update_tracked_keyword` | W | Use with `is_active: false` to **pause** — keeps history |
+| `add_tracked_keywords` | W | Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword |
+| `update_tracked_keyword` | W | Pause or resume only (`is_active`) — keeps history. There is no edit; to change market, add it again |
 | `remove_tracked_keywords` | X | Deletes the keyword's entire position history |
 | `list_tags` / `create_tag` / `assign_tags` | W | Grouping the dashboard barely surfaces |
 | `get_alerts` | | Threshold-crossing events |
 | `mark_alert_read` / `mark_all_alerts_read` | W | |
-| `get_ai_overview_summary` | | Trigger rate and citation rate |
+| `get_ai_overview_summary` | | Trigger rate and citation rate on the **newest check** (`as_of`) |
 | `get_ai_overview_trend` | | Those rates over time |
 | `get_ai_overview_keywords` | | Per-keyword AI Overview detail |
 | `export_tracking_csv` | | Bulk read without paginating |
@@ -73,7 +73,7 @@ Saved and tracked are separate systems with no promotion between them. To track 
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `start_site_audit` | W $ | One crawl at a time per project. Set the page limit deliberately |
+| `start_site_audit` | W $ | One crawl at a time per project. Set the page limit deliberately. JavaScript rendering costs 4 pages per page crawled |
 | `list_audits` | | |
 | `get_audit_summary` | | Score, pages crawled, issue counts |
 | `get_audit_issues` | | Filterable by severity and category |
@@ -100,12 +100,12 @@ Saved and tracked are separate systems with no promotion between them. To track 
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `get_ai_visibility_overview` | | Topic-level share of voice |
+| `get_ai_visibility_overview` | | The GEO summary — average mentions and citation rate, and the daily trend over `days` (default 30). Start here |
 | `get_ai_top_competitors` | | Who owns a topic in AI answers |
-| `get_llm_response_for_keyword` | | The raw response |
+| `get_llm_response_for_keyword` | W $ | Queues a fresh snapshot of one topic across all six engines — one research lookup. Read the answer with `get_geo_topic_detail` |
 | `list_geo_topics` | | |
 | `get_geo_topic_detail` | | Snapshot history and cited sources |
-| `add_geo_topics` | W | Scheduled daily — each topic is a recurring cost |
+| `add_geo_topics` | W | Scheduled weekly by default — each topic is a recurring check |
 | `remove_geo_topics` | X | Deletes the topic's snapshot history |
 
 ## Domains and tech stack — 5
@@ -113,12 +113,12 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | Tool | | Notes |
 | --- | --- | --- |
 | `get_domain_overview` | $ | Authority, traffic estimate, keyword count |
-| `get_domain_top_keywords` | $ | What a domain ranks for — a shortlist source |
-| `get_domain_top_pages` | $ | |
-| `get_domain_competitors` | $ | **Discovered** rivals, not the configured list |
-| `get_tech_stack` | | Project domain only |
+| `get_domain_top_keywords` | $ | The domain's highest-traffic keywords, with position, URL and traffic — a shortlist source |
+| `get_domain_top_pages` | $ | Traffic, keyword count and traffic value per page. No per-page backlink counts |
+| `get_domain_competitors` | $ | **Discovered** rivals, not the configured list: whole-site keywords and traffic, common keywords, avg position. No rank |
+| `get_tech_stack` | $ | Categories grouped by type. No versions or confidence |
 
-Traffic figures are modelled estimates, not analytics. Use them comparatively.
+Traffic figures are modelled estimates, not analytics. Use them comparatively. Domain arguments accept a URL and reduce it to the bare domain.
 
 ## Competitors — 3
 
@@ -128,26 +128,31 @@ Traffic figures are modelled estimates, not analytics. Use them comparatively.
 | `add_competitor` | W | Feeds tracking comparison, GEO, citation gap |
 | `remove_competitor` | W | |
 
-## Local SEO — 5
+## Local SEO — 10
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `get_local_overview` | | |
-| `get_local_keywords` | | |
-| `get_local_rankings` | | Local pack positions |
-| `add_local_keywords` | W | Separate from organic tracked keywords |
+| `get_local_overview` | | In the pack at each location's centre, plus grid top-3 share and average position |
+| `list_local_locations` | | Each location's listing, grid (`grid_size`, `spacing_km`) and keyword count |
+| `search_local_listings` | | Find a Google Business listing by name and town. **Not charged** |
+| `add_local_location` | W | A listing plus its grid: `grid_size` 3, 5 or 7, `spacing_km` apart. Uses one of the plan's local locations |
+| `remove_local_location` | X | Deletes its keywords and their history; frees the location |
+| `get_local_keywords` | | Each keyword at its location (`place_id`), with its newest grid summary |
+| `add_local_keywords` | W | `location_id` + up to 10 keywords per location. Queues the first check at once |
+| `get_local_grid` | | One keyword's position at every grid point, the top 3 at each, and every check's summary. Optional `date` |
+| `get_local_rankings` | | The Maps pack at each location's centre, with ratings and reviews |
 | `get_google_business_profile` | | |
 
-Local keywords need local intent — "near me", or a place name. A bare service term returns no local pack and will never rank here.
+Order: `search_local_listings` → `add_local_location` → `add_local_keywords` → `get_local_grid`. A location is the business's own listing, matched by its Google `cid`, so a business without a website works. Keywords add no location; a location holds at most 10. A grid point's `position: null` means not in the top 20; paid Maps results are excluded. A location made before listings existed has no coordinates and is searched once for its market until a listing is picked (in the dashboard).
 
 ## Web vitals — 2
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `trigger_web_vitals_check` | W | Per URL **and per device**. One at a time per project |
+| `trigger_web_vitals_check` | W $ | Per URL **and per device** (mobile or desktop). One at a time per project. A URL without `https://` is accepted |
 | `get_web_vitals` | | Raw metric values, no pass/fail grade |
 
-Not metered against the plan, unlike audits.
+Each check uses one page of the monthly site audit allowance.
 
 ## Trends — 3 (all billable, all live)
 

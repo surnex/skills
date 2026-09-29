@@ -87,6 +87,8 @@ A cliff in the trend chart is more often a large site dropping out of the index 
 
 **Citation rate** — of those, how many cite the domain. This is the movable number, and it's a percentage **of triggered keywords, not of all keywords**. 50% citation on a 4% trigger rate means cited in half of very few.
 
+Both describe the **newest rank check** (`as_of` in `get_ai_overview_summary`), not every overview ever seen. For movement over time use `get_ai_overview_trend`.
+
 **Mentions and citations are different.** Mentioned without cited means brand awareness without being treated as the source — a content problem.
 
 **Responses are non-deterministic.** The same query returns different sources on different runs. A single absence is a sample. State this whenever you report an AI-visibility finding; it's the most common way to over-conclude here.
@@ -111,6 +113,13 @@ Values are **relative and indexed to the series peak**, not search volumes. Two 
 
 ## Local SEO
 
-Local rankings are unrelated to organic ones for the same term. Position 3 vs 4 matters enormously — the pack typically shows three before requiring a click.
+Local rankings are unrelated to organic ones for the same term. Position 3 vs 4 matters enormously — the Maps pack typically shows three before requiring a click.
 
-Proximity dominates, and the business profile matters more than the website. Local results are far more volatile than organic; read the column, not the last row.
+Proximity dominates, which is why each keyword is searched from every point of a grid around the listing. Read a grid as a map, not an average:
+
+- **`top3_share`** (0–1) — the share of grid points where the business is in the top 3. The headline figure, and the one to trend.
+- **`average_position`** — only over points where it was found. It can improve because the business dropped out of the points where it ranked worst; always read it next to `found` / `cells`.
+- **`position: null`** — not in the top 20 at that point. Paid Maps results are excluded from positions.
+- **Strong centre, weak edges** is the normal shape. The centre cell is what `get_local_rankings` and the overview's "in the pack" count report — a single-point view that overstates reach.
+
+The business profile — categories, reviews, hours — matters more than the website. Local results are more volatile than organic; compare several checks before concluding anything.

@@ -37,7 +37,7 @@ It also names the behaviours that read as failures but aren't: an empty new proj
 surnex/
   SKILL.md                      the guide loaded into context
   references/
-    tools.md                    all 88 MCP tools, flagged for writes and cost
+    tools.md                    all 93 MCP tools, flagged for writes and cost
     workflows.md                worked recipes
     interpreting.md             what the numbers mean and how they mislead
     troubleshooting.md          auth failures, refusals, empty results

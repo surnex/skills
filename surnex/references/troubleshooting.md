@@ -43,11 +43,15 @@ Check the role before reporting a bug.
 
 Establish which of three causes applies before calling it a problem:
 
-**No scheduled run yet.** Rank tracking, backlinks, GEO, and local SEO run on schedules — daily at 00:00 UTC by default. A project created this afternoon has nothing until tomorrow. Report when the next run is due.
+**First run still going, or no scheduled run yet.** A new project's first run starts at creation and fills pages as each job finishes. After that, rank tracking and backlinks run daily at 00:00 UTC by default, GEO and local SEO weekly. Report when the next run is due.
+
+**Local SEO not set up.** It has no first run. Until a location is added (`search_local_listings` → `add_local_location`) and keywords are added at it, every local tool returns nothing. Offer to set it up. Adding keywords queues the first check at once.
 
 **On-demand feature never started.** Audits, web vitals, domain overview, tech stack, keyword research, and AI search have **no schedule**. They only run when something starts them. Offer to.
 
-**Genuinely nothing there.** A new domain has no backlinks. A service term with no local intent returns no local pack. A market with no AI Overviews returns no AI data. These are findings, not faults.
+**Genuinely nothing there.** A new domain has no backlinks. A keyword searched where the business isn't in the top 20 shows `null` at every grid point. A market with no AI Overviews returns no AI data. These are findings, not faults.
+
+**An audit failed with "could not read any pages".** The crawler was blocked, hit a login, or got no answer. That's not a clean site — check `robots.txt`, firewalls and the target URL, then re-run.
 
 ## Ranking changes shows nothing
 

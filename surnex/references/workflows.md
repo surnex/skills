@@ -33,11 +33,11 @@ Then order by **work per issue resolved**, not by issue count:
 2. **Errors.** −2 each: missing title, missing description, missing H1, broken internal links, redirect loops, broken images, mixed content, missing HTTPS.
 3. **The three bonuses.** HTTPS, `robots.txt`, sitemap — +5 each, 15 points for an afternoon.
 4. **Warnings**, largest groups first.
-5. **Notices** — usually intentional. A `noindex` on a thank-you page is correct.
+5. **Notices** — usually intentional. A thank-you page blocked in `robots.txt` is correct. `nofollow_page` means the page's links aren't followed, not that it's kept out of search; the audit has no `noindex` signal, so don't report one.
 
 Use `get_audit_page_detail` when an issue doesn't make sense. Three fields explain most confusion: **Word Count** (thin content that's actually client-rendered), **Canonical URL** (pointing elsewhere, so the page is deliberately de-indexed), **Render-Blocking Scripts** (the real cause of a slow load time).
 
-If the crawl's page limit was low, say so — duplicate titles, orphan pages, and thin content are all under-reported by a narrow crawl.
+If the crawl's page limit was low, say so — duplicate titles, orphan pages, and thin content are all under-reported by a narrow crawl. An audit that read no pages fails with the reason rather than scoring 100 — the site is blocking the crawler, behind a login, or not answering.
 
 ## Link-gap prospecting
 
@@ -70,6 +70,24 @@ Then split the finding in two, because the fixes are unrelated:
 - **Third-party sources own the topic.** Frequently publications, docs, forums, comparison sites. No amount of on-site work helps; the work is getting covered there. If a comparison site is cited and doesn't list them, that's the whole finding.
 
 **Always caveat variance.** AI responses aren't deterministic. One absence is a sample, not evidence — re-run anything commercially important before concluding.
+
+## Local SEO setup
+
+**Goal:** see where a business ranks on Google Maps across its area.
+
+1. `get_usage_summary` — `local_locations` must have room. Starter has none
+2. `search_local_listings` with the business name and town, in the project's market — free. Confirm the right listing with the user; a chain has many
+3. `add_local_location` with that listing, a `grid_size` (3, 5 or 7 points a side, default 5) and `spacing_km` (default 1). Walk-in city business: 0.5–1 km. Service-area business: 2–5 km
+4. `add_local_keywords` — the `location_id` from step 3 and up to 10 keywords, phrased as customers search ("plumber near me", "emergency plumber"). This queues the first check at once
+5. Wait a few minutes, then `get_local_grid` for each keyword (ids from `get_local_keywords`)
+
+Read the grid, not one number:
+
+- **`top3_share`** is the headline — the share of the map where the business is in the pack. `average_position` counts only points where it was found, so it can improve by dropping out of weak points.
+- **Look at the shape.** Strong at the centre and `null` at the edges means it wins nearby searches and loses the rest of the area. `null` is "not in the top 20", not an error.
+- **At a weak point, read `top_results`** — the three businesses that outrank it there are the competitors to study.
+
+The schedule defaults to weekly. Every keyword is one search per grid point, so a bigger grid or more keywords is more recurring work; don't suggest daily without a reason.
 
 ## Keyword expansion
 
@@ -106,10 +124,11 @@ Tell the user the report itself is built under **Reports** in the dashboard, and
 
 ## Setting up a new project
 
-1. `create_project` with its keywords — needs **admin**. It queues the first run at once: rank check, backlinks, AI visibility, local, a site audit, web vitals and domain data. That run draws on the allowance (a few research lookups, one AI brand audit, up to 100 audit pages).
-2. **Set the schedules.** Three default to daily at 00:00 UTC; AI visibility defaults to weekly. Move the run hour to suit when the user reads their data.
-3. Lower what doesn't need daily — backlinks especially. Link profiles barely move day to day and each snapshot spends allowance.
+1. `create_project` with its keywords — needs **admin**. It queues the first run at once: rank check, backlink snapshot and full backlink profile, AI visibility, a site audit, web vitals and domain data. That run draws on the allowance (about five research lookups, one AI brand audit, up to 100 audit pages). Local SEO is not part of it.
+2. **Set the schedules.** Rank tracking and backlinks default to daily at 00:00 UTC; AI visibility and local SEO default to weekly. Move the run hour to suit when the user reads their data.
+3. Lower what doesn't need daily — backlinks especially. Link profiles barely move day to day. Scheduled runs don't spend the monthly allowance, so this is about freshness, not cost.
 4. `add_competitor` for who to compare against, and `add_tracked_keywords` for keywords beyond the first set.
-5. Later audits: `start_site_audit` — only the first one runs by itself.
+5. If the business has a physical location or service area, run **Local SEO setup** above — it stays empty until a location is added.
+6. Later audits: `start_site_audit` — only the first one runs by itself.
 
 Set expectations explicitly: rankings arrive within minutes, everything else as each job finishes.

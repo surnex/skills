@@ -5,7 +5,7 @@ description: Operate Surnex, an SEO platform, through its MCP server — rank tr
 
 # Surnex
 
-Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 88 MCP tools at `https://api.surnex.io/mcp`.
+Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 93 MCP tools at `https://api.surnex.io/mcp`.
 
 Read this before your first tool call. Most mistakes with Surnex come from assuming it behaves like a live query API. It does not.
 
@@ -17,13 +17,13 @@ Data reaches Surnex three ways, and knowing which applies stops you misreporting
 
 | Mode | Features | Refreshes |
 | --- | --- | --- |
-| **Scheduled** | Rank tracking, backlinks, GEO, local SEO | On the project's schedule — daily at 00:00 UTC by default, GEO weekly |
+| **Scheduled** | Rank tracking, backlinks, GEO, local SEO | On the project's schedule — daily at 00:00 UTC by default, GEO and local SEO weekly |
 | **On demand** | Site audits, web vitals, domain overview, tech stack, keyword research, AI search | **Never on their own.** Only when something starts them |
 | **Live** | Trends explore, trending now | Fetched during the call |
 
 Two consequences you will hit:
 
-- **A new project is empty for a few minutes.** Creating one queues its first run straight away — rankings within minutes; backlinks, AI visibility, an audit and the rest as each job finishes — and that run spends some of the plan's allowance. After it, the four schedules keep the data fresh. An empty page right after creation is that run still working, not a failure.
+- **A new project is empty for a few minutes.** Creating one queues its first run straight away — rankings within minutes; backlinks, AI visibility, an audit and the rest as each job finishes — and that run spends some of the plan's allowance. After it, the four schedules keep the data fresh. An empty page right after creation is that run still working, not a failure. **Local SEO is the exception:** it has no first run and stays empty until someone adds a location (the business's Google listing) and keywords at it — see `references/workflows.md`.
 - **An old audit score means nobody has crawled.** Audits never re-run themselves. If the user wants current technical data, call `start_site_audit`.
 
 ## Start here, every time
@@ -50,7 +50,7 @@ These tools call paid providers and draw on the user's plan allowance:
 - **Keyword allowance** — `research_keyword`, `bulk_research_keywords`, `get_keyword_suggestions`, `get_domain_keywords`, `get_serp_results`, and the trends tools
 - **Backlink allowance** — `refresh_backlinks`, `get_backlink_gap`
 - **Domain allowance** — `get_domain_overview` and the other domain lookups
-- **Monthly audit allowance** — `start_site_audit`
+- **Monthly audit allowance** — `start_site_audit` (pages crawled; with JavaScript rendering each page costs 4)
 - **AI-search allowance** — `get_google_ai_mode`, `get_chatgpt_visibility`, `benchmark_llm_platforms`, `get_ai_keyword_trends`, `get_citation_gap`
 - **Content allowance** — `generate_meta_tags`, `generate_content_brief`, `check_grammar`, `paraphrase_text`
 
@@ -66,7 +66,9 @@ Reading stored data is free. Prefer it.
 
 `delete_project` is annotated destructive. It removes the project, all its ranking and backlink history, audits, reports, and share links, and **none of it can be recovered** — history is accumulated daily and cannot be back-filled. Confirm with the user in plain terms before calling it, every time.
 
-Other writes — `remove_tracked_keywords`, `remove_competitor`, `remove_geo_topics`, `delete_saved_keywords` — also destroy history. Removing a tracked keyword deletes its position history; **pausing** it via `update_tracked_keyword` keeps the history.
+Other writes — `remove_tracked_keywords`, `remove_competitor`, `remove_geo_topics`, `remove_local_location`, `delete_saved_keywords` — also destroy history. Removing a tracked keyword deletes its position history; **pausing** it via `update_tracked_keyword` keeps the history. `remove_local_location` takes every keyword at that location and their grids with it.
+
+A tracked keyword can't be edited — `update_tracked_keyword` only pauses or resumes. To move one to another market, add it again with the new location, language or engine; each market is its own keyword with its own history.
 
 `start_site_audit` and `trigger_web_vitals_check` refuse to start if one is already running for that project. That's a refusal, not a queue. Don't retry in a loop; wait.
 
@@ -110,8 +112,8 @@ Check which before reporting a problem. "No backlinks found" on a three-week-old
 
 Load these when the task calls for them:
 
-- **`references/tools.md`** — all 88 tools by area, with which write and which are billable
-- **`references/workflows.md`** — worked recipes: weekly review, audit triage, link-gap prospecting, AI-visibility audit, monthly reporting
+- **`references/tools.md`** — all 93 tools by area, with which write and which are billable
+- **`references/workflows.md`** — worked recipes: weekly review, audit triage, link-gap prospecting, AI-visibility audit, local SEO setup, monthly reporting
 - **`references/interpreting.md`** — what the numbers mean and how they mislead: alert thresholds, audit scoring, keyword metrics, AI-answer variance
 - **`references/troubleshooting.md`** — auth failures, refusals, and empty results
 
