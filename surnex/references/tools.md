@@ -23,7 +23,7 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | `get_keyword_position` | | One keyword's current standing |
 | `get_keyword_ranking_history` | | Positions over a date range |
 | `get_ranking_changes` | | Movement between two dates |
-| `get_competitor_comparison` | | Your position vs competitors, per keyword |
+| `get_competitor_comparison` | | Your position vs competitors, per keyword. Paged: `page`, `per_page` (25), `search` |
 | `add_tracked_keywords` | W | Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword |
 | `update_tracked_keyword` | W | Pause or resume only (`is_active`) — keeps history. There is no edit; to change market, add it again |
 | `remove_tracked_keywords` | X | Deletes the keyword's entire position history |
@@ -57,16 +57,18 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | Tool | | Notes |
 | --- | --- | --- |
 | `get_backlink_summary` | | Domain rank, totals, dofollow split, spam score |
-| `get_referring_domains` | | One row per linking site |
-| `get_backlinks_list` | | One row per link |
-| `get_anchor_texts` | | Anchor distribution |
-| `get_new_lost_backlinks` | | Last 30 days |
+| `get_referring_domains` | | One row per linking site. Paged |
+| `get_backlinks_list` | | One row per link. Paged; `dofollow_only` |
+| `get_anchor_texts` | | Anchor distribution — each anchor's share is of all anchors, not the page. Paged |
+| `get_new_lost_backlinks` | | Last 30 days. Paged, with both counts |
 | `get_tld_distribution` | | |
 | `get_project_backlink_history` | | The growth trend |
-| `get_backlink_gap` | $ | Your project's site against ad-hoc competitor domains, **up to 4 per run**. Waits up to two minutes |
-| `get_backlink_gap_result` | | A gap already started — by id, or the latest. Free |
+| `get_backlink_gap` | $ | Your project's site against ad-hoc competitor domains, **up to 4 per run**. Waits up to two minutes; answers with the first 25 referring domains and the total |
+| `get_backlink_gap_result` | | A gap already started — by id, or the latest. Paged (`page`, `per_page`, `search`). Free |
 | `refresh_backlinks` | W $ | Starts a job |
 | `export_backlinks_csv` | | |
+
+The paged tools take `page`, `per_page` (default 25, up to 100) and `search`, and return `total`. Read the first page and ask for more only when the question needs it. `export_backlinks_csv` has every individual backlink (that list only), and `export_audit_csv` every issue.
 
 `get_backlink_gap` does not read the project's competitor list — pass domains explicitly. If it answers `still_running`, collect with `get_backlink_gap_result` and the `gap_id`: calling `get_backlink_gap` again buys a second analysis.
 
@@ -80,8 +82,8 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | `get_audit_issues` | | Filterable by severity and category |
 | `get_audit_pages` | | |
 | `get_audit_page_detail` | | The measurements behind an issue |
-| `get_duplicate_content` | | |
-| `get_broken_resources` | | |
+| `get_duplicate_content` | | Paged by group |
+| `get_broken_resources` | | Paged by resource |
 | `compare_audits` | | Two crawls — resolved vs new issues |
 | `export_audit_csv` | | |
 
@@ -105,7 +107,7 @@ Saved and tracked are separate systems with no promotion between them. To track 
 | `get_ai_top_competitors` | | Who owns a topic in AI answers |
 | `get_llm_response_for_keyword` | W $ | Queues a fresh snapshot of one topic across all six engines — one research lookup. Read the answer with `get_geo_topic_detail` |
 | `list_geo_topics` | | |
-| `get_geo_topic_detail` | | Snapshot history and cited sources |
+| `get_geo_topic_detail` | | Daily mentions and citation rate; sources and answers for the **newest** snapshot only |
 | `add_geo_topics` | W | Scheduled weekly by default — each topic is a recurring check |
 | `remove_geo_topics` | X | Deletes the topic's snapshot history |
 
