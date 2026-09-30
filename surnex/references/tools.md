@@ -24,7 +24,7 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | `get_keyword_ranking_history` | | Positions over a date range |
 | `get_ranking_changes` | | Movement between two dates |
 | `get_competitor_comparison` | | Your position vs competitors, per keyword. Paged: `page`, `per_page` (25), `search` |
-| `add_tracked_keywords` | W | Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword |
+| `add_tracked_keywords` | W | Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword. Added keywords get a first check at once — positions in about 20 minutes. Re-adding a paused one leaves it paused |
 | `update_tracked_keyword` | W | Pause or resume only (`is_active`) — keeps history. There is no edit; to change market, add it again |
 | `remove_tracked_keywords` | X | Deletes the keyword's entire position history |
 | `list_tags` / `create_tag` / `assign_tags` | W | Grouping the dashboard barely surfaces |
@@ -108,7 +108,7 @@ The paged tools take `page`, `per_page` (default 25, up to 100) and `search`, an
 | `get_llm_response_for_keyword` | W $ | Queues a fresh snapshot of one topic across all six engines — one research lookup. Read the answer with `get_geo_topic_detail` |
 | `list_geo_topics` | | |
 | `get_geo_topic_detail` | | Daily mentions and citation rate; sources and answers for the **newest** snapshot only |
-| `add_geo_topics` | W | Scheduled weekly by default — each topic is a recurring check |
+| `add_geo_topics` | W | One topic per location and language. Added topics get a first snapshot at once (covered by the plan); then weekly by default — each topic is a recurring check |
 | `remove_geo_topics` | X | Deletes the topic's snapshot history |
 
 ## Domains and tech stack — 5
@@ -142,7 +142,7 @@ Traffic figures are modelled estimates, not analytics. Use them comparatively. D
 | `update_local_location` | W | Rename, re-draw the grid (`spacing_km` 0.5, 1, 2 or 5), or pick the listing again. Keeps keywords and history |
 | `remove_local_location` | X | Deletes its keywords and their history; frees the location |
 | `get_local_keywords` | | Each keyword at its location (`place_id`), with its newest grid summary |
-| `add_local_keywords` | W | `location_id` + up to 10 keywords per location. Queues the first check at once |
+| `add_local_keywords` | W | `location_id` + up to 10 keywords per location. Queues a first check of the added keywords at once |
 | `update_local_keyword` | W | `is_active` false pauses, true resumes. Keeps history; still takes a place |
 | `remove_local_keywords` | X | Deletes keywords and their grid history; frees room at the location |
 | `get_local_grid` | | One keyword's position at every grid point, the top 3 at each, and every check's summary. Optional `date` |
