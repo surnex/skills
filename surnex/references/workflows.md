@@ -59,7 +59,7 @@ Compare four at once, not one. With one competitor you get a list of their links
 
 **Goal:** where AI answers are displacing the user, and what to do.
 
-1. `get_ai_overview_summary` — read the **trigger rate** first. Near zero means AI search isn't affecting this market yet; say so and stop. Don't spend the AI-search allowance proving a negative.
+1. `get_ai_overview_summary` — read the **trigger rate** first. Near zero means AI search isn't affecting this market yet; say so and stop. Don't spend AI brand audits proving a negative.
 2. `get_ai_overview_keywords` — find rows where the user **ranks well but isn't cited**. Highest-value gap: the authority exists, the answer is being given without them.
 3. `get_citation_gap` on the top commercial queries with their competitors
 4. `get_chatgpt_visibility` on two or three confirmed gaps — the **snippet** field shows the exact passage that earned a competitor the citation

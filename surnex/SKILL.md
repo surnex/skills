@@ -5,7 +5,7 @@ description: Operate Surnex, an SEO platform, through its MCP server — rank tr
 
 # Surnex
 
-Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 97 MCP tools at `https://api.surnex.io/mcp`.
+Surnex tracks how domains perform in search — traditional results and AI-generated answers. You reach it through 95 MCP tools at `https://api.surnex.io/mcp`.
 
 Read this before your first tool call. Most mistakes with Surnex come from assuming it behaves like a live query API. It does not.
 
@@ -47,12 +47,9 @@ If `list_organizations` returns more than one, pass `organization` on every org-
 
 These tools call paid providers and draw on the user's plan allowance:
 
-- **Keyword allowance** — `research_keyword`, `bulk_research_keywords`, `get_keyword_suggestions`, `get_domain_keywords`, `get_serp_results`, and the trends tools
-- **Backlink allowance** — `refresh_backlinks`, `get_backlink_gap`
-- **Domain allowance** — `get_domain_overview` and the other domain lookups
-- **Monthly audit allowance** — `start_site_audit` (pages crawled; with JavaScript rendering each page costs 4)
-- **AI-search allowance** — `get_google_ai_mode`, `get_chatgpt_visibility`, `benchmark_llm_platforms`, `get_ai_keyword_trends`, `get_citation_gap`
-- **Content allowance** — `generate_meta_tags`, `generate_content_brief`, `check_grammar`, `paraphrase_text`
+- **Research lookups** (one monthly allowance for every keyword, backlink and domain lookup) — `research_keyword`, `bulk_research_keywords`, `get_keyword_suggestions`, `get_domain_keywords`, `get_serp_results`, the trends tools, `refresh_backlinks`, `get_backlink_gap`, `get_domain_overview` and the other domain lookups
+- **Site audit pages** — `start_site_audit` (pages crawled; with JavaScript rendering each page costs 4)
+- **AI brand audits** — `get_google_ai_mode`, `get_chatgpt_visibility`, `benchmark_llm_platforms`, `get_ai_keyword_trends`, `get_citation_gap`
 
 Rules that follow:
 
@@ -85,16 +82,16 @@ A failed job returns a **successful** response containing `status: "failed"` and
 The MCP connection uses OAuth. The token identifies a person, carries **their role**, and reaches every organization they belong to.
 
 - A **member** cannot create or delete projects. Both need admin.
-- Only an **owner** can change billing.
+- Billing is changed by owners and admins, in the dashboard only.
 - No session can mint an API key, change billing, invite or remove people, or reach an organization the user isn't a member of.
 
 If a tool is refused, check the role before assuming a bug.
 
-## Locale is not inherited
+## Which market a tool uses
 
-Tools taking a location and language default to **2840** (United States) and **en**. They do **not** pick up the project's configured market.
+Project tools start on the project's own market for that service when location and language are left out: `add_tracked_keywords` and `search_local_listings` on its rank tracking market, `add_geo_topics` and the AI searches on its AI visibility market, `get_ai_keyword_trends` on its research market. Research, trends and domain lookups default to **2840** (United States) and **en**. Backlink tools take no location.
 
-If the user's project targets anywhere else, pass the codes explicitly on every call. Silently returning US data for a UK site is the most common way to be confidently wrong here.
+If the user's project targets anywhere else, pass the codes explicitly on every research, trends and domain call. Silently returning US data for a UK site is the most common way to be confidently wrong here.
 
 ## Empty is usually not broken
 
@@ -112,7 +109,7 @@ Check which before reporting a problem. "No backlinks found" on a three-week-old
 
 Load these when the task calls for them:
 
-- **`references/tools.md`** — all 97 tools by area, with which write and which are billable
+- **`references/tools.md`** — all 95 tools by area, with which write and which are billable
 - **`references/workflows.md`** — worked recipes: weekly review, audit triage, link-gap prospecting, AI-visibility audit, local SEO setup, monthly reporting
 - **`references/interpreting.md`** — what the numbers mean and how they mislead: alert thresholds, audit scoring, keyword metrics, AI-answer variance
 - **`references/troubleshooting.md`** — auth failures, refusals, and empty results

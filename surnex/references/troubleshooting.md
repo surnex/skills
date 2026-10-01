@@ -85,7 +85,7 @@ Back off, raise page sizes, and poll long-running jobs on an interval matched to
 
 ## Results are for the wrong country
 
-Locale-taking tools default to **2840** (United States) and **en**, and do **not** inherit the project's configured market. Pass the codes explicitly.
+Research, trends and domain lookups default to **2840** (United States) and **en** — they do **not** inherit the project's market. Pass the codes explicitly. Project tools (adding keywords and prompts, the AI searches, the listing search) start on the project's own market for that service when the codes are left out.
 
 This fails silently — you get plausible US data for a UK site — so check it whenever a figure looks unexpectedly off.
 

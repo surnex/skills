@@ -1,6 +1,6 @@
 # Surnex MCP tools
 
-97 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
+95 tools. Most take a `project_id` from `list_projects`. Org-scoped tools take an optional `organization` (name or id) — required in effect when the user belongs to more than one.
 
 Legend: **W** writes · **$** spends plan allowance · **X** destructive and irreversible
 
@@ -10,11 +10,11 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | --- | --- | --- |
 | `list_organizations` | | First call of any session |
 | `list_projects` | | Source of every `project_id` |
-| `create_project` | W | Requires admin. Takes name, domain and keywords; queues the first run at once, which spends some allowance |
+| `create_project` | W | Requires admin. Takes name, domain and keywords; queues the first run at once, which spends some allowance. A market per service: tracking (`location_code`, `language_code`, `search_engine`), research (`research_*`, a pair from `list_search_languages` for=research) and AI visibility (`ai_*`, a country and a for=ai_visibility language). One left out is the tracking market if that service takes it, else refused naming the fields |
 | `delete_project` | X | Irreversible, cascades to all history. Confirm explicitly |
 | `get_usage_summary` | | Call before anything with volume |
 
-## Rank tracking — 19
+## Rank tracking — 21
 
 | Tool | | Notes |
 | --- | --- | --- |
@@ -24,7 +24,9 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 | `get_keyword_ranking_history` | | Positions over a date range |
 | `get_ranking_changes` | | Movement between two dates |
 | `get_competitor_comparison` | | Your position vs competitors, per keyword. Paged: `page`, `per_page` (25), `search` |
-| `add_tracked_keywords` | W | Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword. Added keywords get a first check at once — positions in about 20 minutes. Re-adding a paused one leaves it paused |
+| `find_location` | | Free. A place's `location_code` by name — `austin`, `austin, texas`, `10001` — for an `engine`; countries, regions, cities, postal codes. Optional `country` (ISO) narrows it |
+| `list_search_languages` | | Free. `for`: tracking (default) — an engine's `language_code`s, any with any of its locations; ai_visibility — languages all six AI engines answer in; research — research's country-and-language pairs. Baidu: `zh-CN` only; Seznam: `cs` only; Naver: none. Search volume exists only in Google Ads' 46 languages (`pt`, not `pt-BR`); a keyword in another tracks with no volume |
+| `add_tracked_keywords` | W | `search_engine`: google, bing, yahoo, baidu, naver, seznam. Any place and language the engine searches from (a 400 names what it refuses); Naver takes neither and is stored as Korea/Korean. Counts against the plan's keyword limit. The same keyword in another location, language or engine is a separate keyword. Added keywords get a first check at once — positions in about 20 minutes. Re-adding a paused one leaves it paused |
 | `update_tracked_keyword` | W | Pause or resume only (`is_active`) — keeps history. There is no edit; to change market, add it again |
 | `remove_tracked_keywords` | X | Deletes the keyword's entire position history |
 | `list_tags` / `create_tag` / `assign_tags` | W | Grouping the dashboard barely surfaces |
@@ -104,12 +106,12 @@ The paged tools take `page`, `per_page` (default 25, up to 100) and `search`, an
 | Tool | | Notes |
 | --- | --- | --- |
 | `get_ai_visibility_overview` | | The GEO summary — average mentions and citation rate, and the daily trend over `days` (default 30). Start here |
-| `get_ai_top_competitors` | | Who owns a topic in AI answers |
-| `get_llm_response_for_keyword` | W $ | Queues a fresh snapshot of one topic across all six engines — one research lookup. Read the answer with `get_geo_topic_detail` |
+| `get_ai_top_competitors` | | Who owns a prompt in AI answers |
+| `get_llm_response_for_keyword` | W $ | Queues a fresh snapshot of one prompt across all six engines — one research lookup. Read the answer with `get_geo_topic_detail` |
 | `list_geo_topics` | | |
 | `get_geo_topic_detail` | | Daily mentions and citation rate; sources and answers for the **newest** snapshot only |
-| `add_geo_topics` | W | One topic per location and language. Added topics get a first snapshot at once (covered by the plan); then weekly by default — each topic is a recurring check |
-| `remove_geo_topics` | X | Deletes the topic's snapshot history |
+| `add_geo_topics` | W | One prompt per location and language. Added prompts get a first snapshot at once (covered by the plan); then weekly by default — each prompt is a recurring check |
+| `remove_geo_topics` | X | Deletes the prompt's snapshot history |
 
 ## Domains and tech stack — 5
 
@@ -168,16 +170,7 @@ Each check uses one page of the monthly site audit allowance.
 | `get_trending_now` | $ | |
 | `get_related_queries` | $ | |
 
-## Content — 4 (all billable)
-
-| Tool | | Notes |
-| --- | --- | --- |
-| `generate_meta_tags` | $ | **No dashboard equivalent** |
-| `generate_content_brief` | $ | **No dashboard equivalent** |
-| `check_grammar` | $ | |
-| `paraphrase_text` | $ | |
-
-The first two exist only through MCP, which makes content planning a genuinely agent-native workflow.
+There are no content-writing tools. To draft a content brief, meta tags or copy, write it yourself from the research tools' output — `research_keyword`, `get_keyword_suggestions`, `get_ai_top_competitors`.
 
 ## Free vs billable, at a glance
 
