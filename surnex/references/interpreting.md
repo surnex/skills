@@ -25,7 +25,7 @@ Consequences worth knowing before you explain a missing alert:
 - **There is no Lost Top 3.** Falling 2 → 7 raises Ranking Dropped only.
 - **The first check ever fires nothing** — no previous position to compare.
 
-"Not ranking" means outside the top 100, not absent from Google.
+"Not ranking" means outside the top 100, not absent from Google. The dashboard, reports and emails write it as `>100`; `—` there means the keyword hasn't been checked yet. Over MCP both are a null position — a tracked keyword's `last_checked_at` tells them apart.
 
 ## Audit score
 
@@ -131,5 +131,6 @@ Proximity dominates, which is why each keyword is searched from every point of a
 - **`average_position`** — only over points where it was found. It can improve because the business dropped out of the points where it ranked worst; always read it next to `found` / `cells`.
 - **`position: null`** — not in the top 20 at that point. Paid Maps results are excluded from positions.
 - **Strong centre, weak edges** is the normal shape. The centre cell is what `get_local_rankings` and the overview's "in the pack" count report — a single-point view that overstates reach.
+- **A miss counts as 20 at the centre**, as rank tracking counts 100. `get_local_overview`'s `average_position` and its daily `trend` take each keyword's latest check, a check that didn't find the listing in the top 20 counted as 20; `in_map_pack` counts latest checks only, so a keyword that dropped out is not in it.
 
 The business profile — categories, reviews, hours — matters more than the website. Local results are more volatile than organic; compare several checks before concluding anything.
