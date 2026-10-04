@@ -59,7 +59,17 @@ Metrics are captured when the lookup runs and never refresh themselves. A saved 
 
 ## Rankings
 
-**Average position excludes keywords that don't rank.** It therefore *improves* when a keyword falls out of the top 100 entirely. Always read it alongside the count of ranking keywords — the average alone can move the wrong way for the right reason.
+**Average position counts a keyword outside the top 100 as 100** — Semrush's rule. Every checked keyword is in it; one not yet checked is not. So losing a keyword makes the average worse and gaining one makes it better, and a project tracking many keywords it doesn't rank for reads high: 2, 6 and not ranking average 36, not 4. Before calling a high average bad, look at how much of it is `not_ranking` in the distribution — those are targets, not failures of the pages that do rank.
+
+**Movement is four counts, as Semrush shows it.** `get_ranking_overview` compares each keyword's latest check with the one before:
+
+| Field | Means |
+| --- | --- |
+| `improved` / `declined` | In the top 100 both times, moved up / down |
+| `entered_top100` | Not in the top 100 last check, is now |
+| `lost_top100` | In the top 100 last check, isn't now |
+
+A keyword's first check is in none of them. A tracked keyword's `checked_before` says which case a null `previous_position` is: `false` is a first check, `true` is "outside the top 100 last time". Alerts count the same moves differently — entering the top 100 raises Ranking Improved, not a separate alert — so the alert feed and these counts won't match one for one.
 
 **Position bands are exclusive.** 1–3, 4–10, 11–20, 21–50, 51–100, not ranking. They sum to the total tracked. "In top 10" is the first two bands combined.
 

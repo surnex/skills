@@ -26,7 +26,7 @@ Pair it with the [MCP server](https://docs.surnex.io/mcp/connect) — the skill 
 - **Which calls cost money** — the tools that reach paid providers and draw on the user's plan allowance, and why looping one over a list is the failure mode that matters.
 - **Choosing an organization** — the server refuses to guess when a user belongs to several, rather than billing the wrong one.
 - **Acting as the user** — the OAuth token carries their role, so a member can't create or delete projects.
-- **Reading the numbers correctly** — alert thresholds, the audit score's deduction caps, why average position improves when a keyword stops ranking, and why a single AI-visibility absence isn't evidence.
+- **Reading the numbers correctly** — alert thresholds, the audit score's deduction caps, why average position counts a keyword outside the top 100 as 100, and why a single AI-visibility absence isn't evidence.
 - **Worked workflows** — weekly review, audit triage, link-gap prospecting, AI-visibility audit, keyword expansion, new-project setup.
 
 It also names the behaviours that read as failures but aren't: an empty new project whose first run is still working, a not-found that means wrong organization rather than deleted, and a refused second audit that's a guard rather than an error.

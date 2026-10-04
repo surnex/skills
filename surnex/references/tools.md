@@ -18,7 +18,7 @@ Legend: **W** writes · **$** spends plan allowance · **X** destructive and irr
 
 | Tool | | Notes |
 | --- | --- | --- |
-| `get_ranking_overview` | | Totals, average position, distribution |
+| `get_ranking_overview` | | Totals, average position (outside the top 100 counts as 100), distribution, improved / declined / entered / lost top 100 |
 | `get_tracked_keywords` | | |
 | `get_keyword_position` | | One keyword's current standing |
 | `get_keyword_ranking_history` | | Positions over a date range |
