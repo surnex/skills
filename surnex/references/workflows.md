@@ -113,14 +113,16 @@ Then `save_keywords` for the shortlist, `add_tracked_keywords` for what graduate
 
 Surnex reports are built in the dashboard, not through MCP. What you can do is assemble the substance:
 
-1. `get_ranking_overview` and `get_ranking_changes` for the period
+1. `get_ranking_overview` and `get_ranking_changes` — **today's** state, not the period's. For a month that has ended, read each keyword's positions with `get_keyword_ranking_history`, which reaches back a number of `days` from today, one keyword at a time — and say which you used
 2. `get_project_backlink_history`
 3. `compare_audits` between the period's two crawls
-4. `get_ai_overview_summary` if AI visibility is in scope
+4. `get_ai_overview_summary` if AI visibility is in scope — also today's
 
 Then write the narrative — which is the part that's actually hard. Include what got worse; a report with only good news stops being believed. Explain the causes you can see and name the ones you can't.
 
-Tell the user the report itself is built under **Reports** in the dashboard, and that only a PDF export is a frozen snapshot — a share link keeps showing live data.
+Tell the user the report itself is built under **Reports** in the dashboard. Its figures and tables are as of the **last day of its date range**, compared with the period before: a September report shows 30 September whenever it's opened, so a share link to a finished month keeps showing the same numbers. A range that includes today keeps filling in.
+
+**Reporting in another tool** (Oviond, a spreadsheet, a BI tool): the REST reporting API gives every figure as of any date — `GET /v1/reporting` lists what's there, `GET /v1/projects/{projectId}/reporting/{view}?date_start=…&date_end=…` answers it. It reads stored data only and spends nothing. Point the user to **Settings → API Keys** to create a **Read Only** key for it: it can read but never change anything or run paid lookups. That is REST, not MCP — the MCP server refuses API keys.
 
 ## Setting up a new project
 
